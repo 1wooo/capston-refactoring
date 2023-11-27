@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+  <title>방해금지모드 알림서비스</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/53a8c415f1.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="/css/nfService.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="login">
+      <form method="post" action="notificationService">
+        <div class="loginForm">
+          <h1>방해금지모드 알림 서비스 차량 등록</h1>
+          <div class="login_id">
+            <h4>차량번호</h4>
+            <input type="text" name="carN" placeholder="ex.12가 3456">
+          </div>
+          <div class="login_pw">
+            <h4>전화번호</h4>
+            <input type="text" name="phoneNumber" placeholder="-없이 써주세요 (이미 등록한 차량이라면 비워주셔도 됩니다.)">
+          </div>
+          <div class="submit">
+            <input type="submit" value="등록/시간확인">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+
+

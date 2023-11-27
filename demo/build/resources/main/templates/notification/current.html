@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+    <link href="/css/currentPage.css" rel="stylesheet" />
+    <title>주차시간확인</title>
+</head>
+<body>
+    <div class="wrap">
+        <div class="login">
+            <h1>주차시간 얼마남았지?</h1>
+            <div class="loginForm">
+                    <div class="login_id">
+                        <h4>입차시간</h4>
+                        <p>
+                            <h5 id="clock1"></h5>
+                        </p>
+                        <h4>소요시간</h4>
+                        <h5 id="clock">clock</h5>
+                </div>
+        </div>
+</div>
+    <script th:inlne="javascript">
+        var Target = document.getElementById("clock");
+        var Target1 = document.getElementById("clock1");
+
+        function clock() {
+            // 비교시간
+            /*<![CDATA[*/
+            var now = new Date();
+            Target1.innerText =  "[[${enteringTime}]]";
+
+            // 현재시간
+            var year = now.getFullYear();     // 연도
+            var month = now.getMonth()+1;     // 월(+1해줘야됨)
+            var day = now.getDate();          // 일
+            var hours = now.getHours();       // 현재 시간
+            var minutes = now.getMinutes();   // 현재 분
+            var seconds = now.getSeconds();   // 현재 초
+
+            var sttDt = '[[${enteringTime}]]';
+
+            var nowday = sttDt.split("-");
+            var tmp = nowday[2].split(" ");
+            var realtime = tmp[1].split(":");
+
+            var sttYear = nowday[0];
+            var sttMonth = nowday[1];
+            var sttDay = tmp[0];
+            var sttHours = realtime[0];
+            var sttMinutes = realtime[1];
+            var sttSec = realtime[2];
+
+            var date1 = new Date(year, month, day, hours, minutes, seconds);                    // 현재
+            var date2 = new Date(sttYear, sttMonth, sttDay, sttHours, sttMinutes, sttSec);     // 파라미터
+            var elapsedMSec = date1.getTime() - date2.getTime();
+            var elapsedMin = elapsedMSec / 1000 / 60;
+            var elapsedSec = elapsedMSec / 1000 % 60;
+            var outputHours = 0
+
+            if (elapsedMin >= 91) {
+                Target.innerText = '법적 허용 주차시간을 초과하였습니다.';
+            }
+            else {
+                if (elapsedMin >= 60) {
+                    outputHours = parseInt(parseInt(elapsedMin)/60);
+                    elapsedMin = parseInt(elapsedMin)%60;
+                }
+
+                elapsedMin = parseInt(elapsedMin);    // 정수 표기를 위해 parseInt
+
+                Target.innerText = outputHours + '시간' + elapsedMin + '분' + elapsedSec +'초 소요되었습니다.';
+            }
+            /*]]>*/
+        }
+        clock();
+        setInterval(clock, 1000); // 1초마다 실행
+    </script>
+</body>
+</html>

@@ -23,13 +23,14 @@ public class JoinController {
         return "joinPage/join";
     }
     @PostMapping("/joinProc")
-    public String joinProc(UserRegistrationDto userRegistrationDto) {
-
+    public String joinProc(UserRegistrationDto userRegistrationDto, Model model) {
         boolean isJoinPossible = joinService.join(userRegistrationDto);
-        if (isJoinPossible) {
-            // 회원가입 완료 or 실패
-        }
 
-        return "redirect:/";
+        if (isJoinPossible) {
+            model.addAttribute("message", "회원가입 성공!");
+        } else {
+            model.addAttribute("message", "회원가입 실패! 다시 시도해주세요.");
+        }
+        return "redirect:/join";
     }
 }

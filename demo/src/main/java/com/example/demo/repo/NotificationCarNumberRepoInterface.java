@@ -11,6 +11,4 @@ import java.util.Optional;
 @Repository
 public interface NotificationCarNumberRepoInterface extends JpaRepository<NotificationCarNumberDTO, Long> {
     Optional<NotificationCarNumberDTO> findBycarN(String carNumber);
-
-//    @Query("SELECT toPhoneNumber from NotificationCarNumberDTO n where n.carN =: carNumber")
 }

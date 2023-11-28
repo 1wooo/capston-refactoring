@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.DTO.UserRegistrationDto;
 import com.example.demo.Entity.Member;
 import com.example.demo.Entity.Role;
 import com.example.demo.repo.MemberRepo;
@@ -18,16 +19,19 @@ public class JoinServiceImpl implements JoinService{
     }
 
     @Override
-    public boolean join(Member member) {
-        if (memberRepo.existsByMemberId(member.getMemberId())) {
+    public boolean join(UserRegistrationDto userRegistrationDto) {
+        if (memberRepo.existsByMemberId(userRegistrationDto.getUsername())) {
             return false;
         }
 
-        String rawPassword = member.getPassword();
+        String rawPassword = userRegistrationDto.getPassword();
         String encPassword = bCryptPasswordEncoder.encode(rawPassword);
-        member.setPassword(encPassword);
-        member.setRole(Role.valueOf("ROLE_ADMIN"));
-        memberRepo.save(member);
+
+        Member newMember = new Member();
+        newMember.setMemberId(userRegistrationDto.getUsername());
+        newMember.setPassword(encPassword);
+        newMember.setRole(Role.valueOf("ROLE_ADMIN"));
+        memberRepo.save(newMember);
 
         return true;
     }

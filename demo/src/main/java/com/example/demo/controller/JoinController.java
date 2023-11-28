@@ -4,6 +4,7 @@ import com.example.demo.DTO.UserRegistrationDto;
 import com.example.demo.Entity.Member;
 import com.example.demo.service.JoinService;
 import lombok.NoArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +24,15 @@ public class JoinController {
         return "joinPage/join";
     }
     @PostMapping("/joinProc")
-    public String joinProc(UserRegistrationDto userRegistrationDto, Model model) {
+    public ResponseEntity<String> joinProc(UserRegistrationDto userRegistrationDto) {
         boolean isJoinPossible = joinService.join(userRegistrationDto);
 
         if (isJoinPossible) {
-            model.addAttribute("message", "회원가입 성공!");
+            // 회원가입 성공 시 200 OK와 메시지 반환
+            return ResponseEntity.ok("회원가입 성공!");
         } else {
-            model.addAttribute("message", "회원가입 실패! 다시 시도해주세요.");
+            // 회원가입 실패 시 400 Bad Request와 메시지 반환
+            return ResponseEntity.badRequest().body("회원가입 실패! 다시 시도해주세요.");
         }
-        return "redirect:/join";
     }
 }

@@ -24,7 +24,7 @@ import java.util.*;
 @AllArgsConstructor
 public class MainController {
     @Autowired
-    private MemberServiceInterface memberServiceInterface;
+    private MemberService memberService;
     @Autowired
     private TableServiceInterface tableServiceInterface;
     @Autowired
@@ -48,7 +48,7 @@ public class MainController {
         }
 
         // 로그인 기능 수행
-        Optional<Member> loginMember = memberServiceInterface.login(loginId, loginPassword); // 여기서 널 처리
+        Optional<Member> loginMember = memberService.login(loginId, loginPassword); // 여기서 널 처리
         //글로벌 에러 발생
         if (loginMember.isEmpty()) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");

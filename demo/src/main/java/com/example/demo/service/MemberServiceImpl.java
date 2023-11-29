@@ -3,14 +3,12 @@ package com.example.demo.service;
 import com.example.demo.Entity.Member;
 import com.example.demo.repo.CarNumberRepoInterface;
 import com.example.demo.repo.MemberRepo;
-import com.example.demo.repo.SpringDataJpaMemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class MemberServiceImpl implements MemberServiceInterface {
+public class MemberServiceImpl implements MemberService {
 
     private final MemberRepo memberRepo;
     private final CarNumberRepoInterface carNumberRepoInterface;

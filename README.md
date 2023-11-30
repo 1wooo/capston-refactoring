@@ -1,1 +1,2 @@
-# capston-refactoring
+# 캡스톤 프로젝트 한거 리팩토링하기
+

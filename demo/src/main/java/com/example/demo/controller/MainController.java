@@ -29,60 +29,12 @@ public class MainController {
     private TableServiceInterface tableServiceInterface;
     @Autowired
     private SmsService smsService;
-
     @Autowired
     private S3Service s3Service;
 
-
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    public String login(@ModelAttribute LoginForm form, BindingResult bindingResult,
-                        HttpServletRequest request, Model model) throws Exception {
-
-        String loginId = form.getLoginId();
-        String loginPassword = form.getPassword();
-
-        if (bindingResult.hasErrors()) {
-            System.out.println("first Error");
-            return "/";
-//            System.out.println(bindingResult.getAllErrors());
-        }
-
-        // 로그인 기능 수행
-        Optional<Member> loginMember = memberService.login(loginId, loginPassword); // 여기서 널 처리
-        //글로벌 에러 발생
-        if (loginMember.isEmpty()) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            System.out.println("Second Error");
-            return "loginPage/HomeLogin";
-        } else {
-            Member getMember = loginMember.get();
-            // 성공 로직
-//            Cookie cookie = new Cookie("memberId", String.valueOf(getMember.getId()));
-//
-//            response.addCookie(cookie);
-//        return "redirect:/";
-
-            HttpSession session = request.getSession();
-            session.setAttribute(SessionConst.LOGIN_MEMBER, getMember);
-
-            List<Long> monthData = tableServiceInterface.getMonthData();
-            model.addAttribute("monthData", monthData);
-
-            return "mainPage/index";
-        }
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String getLoginPage(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false)
-                               Member member, HttpServletRequest request, Model model) {
-
-        if (member == null) {
-            return "loginPage/HomeLogin";
-        } else {
-            List<Long> monthData = tableServiceInterface.getMonthData();
-            model.addAttribute("monthData", monthData);
-            return "mainPage/index";
-        }
+    @GetMapping("/mainPage/index")
+    public String getMainPage() {
+        return "mainPage/index";
     }
 
     @GetMapping("mainPage/tables")

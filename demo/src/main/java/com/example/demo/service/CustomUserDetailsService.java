@@ -16,9 +16,10 @@ import java.util.Optional;
 public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepo memberRepo;
 
-    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-        Optional<Member> member = memberRepo.findByMemberId(loginId);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Member> member = memberRepo.findByMemberId(username);
         if (member.isPresent()) {
+            System.out.println(member.get() + " 로그인 성공 ");
             return new MemberDetails(member.get());
         }else {
             throw new UsernameNotFoundException("아이디 없음");

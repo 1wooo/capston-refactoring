@@ -18,6 +18,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/login/**", "/join/**").permitAll()
                 .antMatchers("/mainPage/**").access("hasRole('ROLE_ADMIN')")
+                .anyRequest().permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login")

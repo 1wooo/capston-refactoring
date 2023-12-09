@@ -24,33 +24,24 @@ import java.util.*;
 @AllArgsConstructor
 public class MainController {
     @Autowired
-    private MemberService memberService;
-    @Autowired
     private TableServiceInterface tableServiceInterface;
     @Autowired
     private SmsService smsService;
-    @Autowired
-    private S3Service s3Service;
 
     @GetMapping("mainPage/index")
     public String getMainPage() {
         return "mainPage/index";
     }
 
-    @GetMapping("mainPage/tables")
-    public String getTablePage(HttpServletRequest request, Model model) {
-        // 로그인 검증
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return "loginPage/HomeLogin";
-        } else {
-            List<carNumber> cars = tableServiceInterface.getAll();
-            model.addAttribute("illegalCars", cars);
-            return "mainPage/tables";
-        }
-        // 로그인 검증
-    }
+    @PostMapping("mainPage/tables/carRemove") // web에서 관리자가 삭제 버튼 누를 시 db 업데이트
+    public String illegalCarNumberRemove(@RequestParam List<String> illegalCarNumberTableID) {
 
+        for (int i = 0; i < illegalCarNumberTableID.size(); i++) {
+            Long id = Long.valueOf(illegalCarNumberTableID.get(i));
+            tableServiceInterface.illegalCarRemove(id);
+        }
+        return "redirect:/mainPage/tables";
+    }
 
     @PostMapping("loginPage/testApi") // 모델에서 넘어오는 위반차량정보 receive
     public void ApiTest(@RequestBody HashMap<String, Object> map) throws ParseException {
@@ -124,16 +115,6 @@ public class MainController {
             tableServiceInterface.updateEnteringTime((String)map.get("carNumber"), timestamp);
             tableServiceInterface.resetNewCarExitTime((String)map.get("carNumber"));
         }
-    }
-
-    @PostMapping("mainPage/tables/carRemove") // web에서 관리자가 삭제 버튼 누를 시 db 업데이트
-    public String illegalCarNumberRemove(@RequestParam List<String> illegalCarNumberTableID) {
-
-        for (int i = 0; i < illegalCarNumberTableID.size(); i++) {
-            Long id = Long.valueOf(illegalCarNumberTableID.get(i));
-            tableServiceInterface.illegalCarRemove(id);
-        }
-        return "redirect:/mainPage/tables";
     }
 
     // 알림서비스 //

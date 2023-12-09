@@ -32,7 +32,7 @@ public class MainController {
     @Autowired
     private S3Service s3Service;
 
-    @GetMapping("/mainPage/index")
+    @GetMapping("mainPage/index")
     public String getMainPage() {
         return "mainPage/index";
     }
@@ -51,32 +51,6 @@ public class MainController {
         // 로그인 검증
     }
 
-//    @GetMapping("mainPage/carlog")
-//    public String getCarlogPage(HttpServletRequest request, Model model) {
-//
-//        HttpSession session = request.getSession(false);
-//        if (session == null) {
-//            return "loginPage/HomeLogin";
-//        } else {
-//            List<String> keys = s3Service.getS3Keys();
-//            List<String> urls = s3Service.objectsURL(keys);
-//            model.addAttribute("urls", urls);
-//            return "mainPage/Carlog";
-//        }
-//    }
-//
-//    @GetMapping("mainPage/liveCam")
-//    public String getLiveCamPage(HttpServletRequest request, Model model) {
-//
-//        //로그인 검증
-//        HttpSession session = request.getSession(false);
-//        if (session == null) {
-//            return "loginPage/HomeLogin";
-//        } else {
-//            return "mainPage/liveCam";
-//        }
-//        // 로그인 검증
-//    } // 라이브캠 기능은 구현하지 않기로 함.
 
     @PostMapping("loginPage/testApi") // 모델에서 넘어오는 위반차량정보 receive
     public void ApiTest(@RequestBody HashMap<String, Object> map) throws ParseException {

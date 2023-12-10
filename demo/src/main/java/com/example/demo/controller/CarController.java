@@ -20,7 +20,7 @@ import java.util.List;
 public class CarController {
 
     private final TableServiceInterface tableServiceInterface;
-    @PostMapping("mainPage/tables/carRemove") // web에서 관리자가 삭제 버튼 누를 시 db 업데이트
+    @PostMapping("mainPage/tables/carRemove")
     public String illegalCarNumberRemove(@RequestParam List<String> illegalCarNumberTableID) {
 
         for (int i = 0; i < illegalCarNumberTableID.size(); i++) {

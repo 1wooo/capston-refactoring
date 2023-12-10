@@ -15,7 +15,8 @@ import java.util.Optional;
 
 // 위반차량관리와 관련된 모든 서비스 구현
 @Service
-public class mainServiceImpl implements TableServiceInterface {
+@Transactional
+public class TableServiceImpl implements TableServiceInterface {
 
     @Autowired
     private CarNumberRepoInterface carNumberRepoInterface;

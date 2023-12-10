@@ -6,6 +6,7 @@ import com.example.demo.DTO.carNumber;
 import com.example.demo.s3.S3Service;
 import com.example.demo.service.*;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,21 +22,15 @@ import java.util.*;
 
 @Slf4j
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MainController {
-    @Autowired
     private TableServiceInterface tableServiceInterface;
-    @Autowired
     private SmsService smsService;
 
     @GetMapping("mainPage/index")
     public String getMainPage() {
         return "mainPage/index";
     }
-
-
-
-
 
     @PostMapping("notification/exittimeupdate")
     public void carUpdateExitTime(@RequestBody HashMap<String, Object> map) throws ParseException {

@@ -35,24 +35,6 @@ public class CarController {
 
     @PostMapping("table/illegal_register") // 모델에서 넘어오는 위반차량정보 receive
     public void illegalCarNumberRegister(@RequestBody HashMap<String, Object> map) throws ParseException {
-
-        carNumber car = new carNumber();
-        car.setCarN((String) map.get("carNumber"));
-        car.setIllegalCode((int) map.get("illegalCode"));
-        car.setFine((int) map.get("fine"));
-        // 날짜처리코드
-        String timeStr = (String) map.get("EnterDate");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date date = formatter.parse(timeStr);
-        java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
-        // 날짜처리코드
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(timestamp.getTime());
-        cal.add(Calendar.HOUR, 12);
-        java.sql.Timestamp newTime = new java.sql.Timestamp(cal.getTime().getTime());
-        car.setTimestamp(newTime);
-
-        tableServiceInterface.illegalCarRegister(car);
+        tableServiceInterface.illegalCarRegister(map);
     }
 }

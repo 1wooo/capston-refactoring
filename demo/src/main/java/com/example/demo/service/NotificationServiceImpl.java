@@ -2,12 +2,18 @@ package com.example.demo.service;
 
 import com.example.demo.DTO.MessageDTO;
 import com.example.demo.DTO.NotificationCarNumberDTO;
-import com.example.demo.DTO.carNumber;
+import com.example.demo.exception.NotFoundCarException;
 import com.example.demo.repo.CarNumberRepo;
 import com.example.demo.repo.NotificationCarNumberRepo;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,20 +21,23 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+@Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationCarNumberRepo notificationCarNumberRepo;
-    private final IllegalCarServiceInterface illegalCarServiceInterface;
     private final SmsService smsService;
 
-    private final CarNumberRepo carNumberRepo;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private Future<?> taskFuture;
 
-    private carNumber createCarNumberFromMap(HashMap<String, Object> map) throws ParseException {
-        carNumber car = new carNumber();
+
+    private NotificationCarNumberDTO createCarNumberFromMap(HashMap<String, Object> map) throws ParseException {
+        NotificationCarNumberDTO car = new NotificationCarNumberDTO();
         car.setCarN((String) map.get("carNumber"));
-        car.setIllegalCode((int) map.get("illegalCode"));
-        car.setFine((int) map.get("fine"));
-
         // 날짜 처리 메소드 호출
         car.setTimestamp(createTimestampFromMap(map));
 
@@ -80,13 +89,13 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void updateCurrentCarExitTime(HashMap<String, Object> map) throws ParseException {
-        carNumber car = createCarNumberFromMap(map);
+    public void updateCurrentCarExitTime(HashMap<String, Object> map) throws ParseException, NotFoundCarException {
+        NotificationCarNumberDTO car = createCarNumberFromMap(map);
         Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findBycarN(car.getCarN());
         if (tmp.isPresent()) {
             NotificationCarNumberDTO carForUpdate = tmp.get();
             carForUpdate.setExitTime(car.getTimestamp());
-        }
+        } else throw new NotFoundCarException("출차 차량 확인 불가");
     }
 
     @Override
@@ -115,12 +124,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public String isExistPhoneNumber(String carNumber) {
         Optional<NotificationCarNumberDTO> bytoPhoneNumber = notificationCarNumberRepo.findBycarN(carNumber);
-        String phoneNumber = bytoPhoneNumber.get().getPhoneNumber();
-        if (bytoPhoneNumber.isPresent()) {
-            return phoneNumber;
-        } else {
-            return null;
-        }
+        return bytoPhoneNumber.map(NotificationCarNumberDTO::getPhoneNumber).orElse(null);
     }
 
     @Override
@@ -131,17 +135,91 @@ public class NotificationServiceImpl implements NotificationService {
 
 
     @Override
-    public void NotificationCarRegister(NotificationCarNumberDTO notificationCarNumberDTO) {
+    public void notificationCarRegister(NotificationCarNumberDTO notificationCarNumberDTO) {
         notificationCarNumberRepo.save(notificationCarNumberDTO);
     }
 
     @Override
     @Async
-    public void Notification_alarm(String carNumber) {
-        MessageDTO sendMsg = new MessageDTO();
+    public void notification_alarm(HashMap<String, Object> map) throws InterruptedException, ParseException {
         int sec = 0;
+        NotificationCarNumberDTO car = createCarNumberFromMap(map);
+        Optional<NotificationCarNumberDTO> notificationCarNumberDTO = isExist(car.getCarN());
+
+        if (notificationCarNumberDTO.isEmpty()) {
+            notificationCarRegister(car);
+        } else {
+            updateEnteringTime(car.getCarN(), car.getTimestamp());
+            resetNewCarExitTime(car.getCarN());
+        }
+
+        String phoneNumber = isExistPhoneNumber(car.getCarN());
+
+        for (int i = 30; i > 0; i--) {
+            Thread.sleep(1000);
+        } // 30초 대기
+
+        if (shouldTerminate(car.getCarN(), phoneNumber)) {
+            return;
+        }
+        sendMessage("주차시간 30분 소요되었습니다.", phoneNumber);
 
 
+        for (int i = 30; i > 0; i--) {
+            Thread.sleep(1000);
+        } // 30초 대기
 
+        if (shouldTerminate(car.getCarN(), phoneNumber)) {
+            return;
+        }
+        sendMessage("주차시간 60분 소요되었습니다.", phoneNumber);
+
+        for (int i = 30; i > 0; i--) {
+            Thread.sleep(1000);
+        } // 30초 대기
+
+        if (shouldTerminate(car.getCarN(), phoneNumber)) {
+            return;
+        }
+        sendMessage("주차시간 90분 소요되었습니다.", phoneNumber);
+
+        for (int i = 30; i > 0; i--) {
+            Thread.sleep(1000);
+        } // 30초 대기
+        if (shouldTerminate(car.getCarN(), phoneNumber)) {
+            return;
+        }
+        sendMessage("법적 허용 주차시간 초과되었습니다. 출차 부닥드립니다.", phoneNumber);
+    }
+
+    private void sendMessage(String msg, String phoneNumber) {
+        MessageDTO sendMsg = new MessageDTO();
+
+        if (phoneNumber != null) {
+            sendMsg.setContent(msg);
+            sendMsg.setTo(phoneNumber);
+            try {
+                smsService.sendSms(sendMsg);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            } catch (InvalidKeyException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private boolean shouldTerminate(String carNumber, String phoneNumber) {
+        Optional<NotificationCarNumberDTO> findCar = notificationCarNumberRepo.findBycarN(carNumber);
+        if (findCar.get().getExitTime() != null) {
+            if (isOverTIme(carNumber)) sendMessage("법적 허용 충전시간 초과", phoneNumber);
+            return true;
+        }
+        return false;
     }
 }

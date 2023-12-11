@@ -1,11 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.DTO.carNumber;
+import com.example.demo.DTO.CarNumber;
 import java.text.ParseException;
 import java.util.*;
 
 public interface IllegalCarServiceInterface {
-    List<carNumber> getAll();
+    List<CarNumber> getAll();
 
     void illegalCarRegister(HashMap<String, Object> map) throws ParseException;
 

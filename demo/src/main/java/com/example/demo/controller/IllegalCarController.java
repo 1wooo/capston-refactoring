@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.DTO.carNumber;
+import com.example.demo.DTO.CarNumber;
 import com.example.demo.service.IllegalCarServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ public class IllegalCarController {
     private final IllegalCarServiceInterface illegalCarServiceInterface;
     @GetMapping("mainPage/tables")
     public String getTablePage(HttpServletRequest request, Model model) {
-        List<carNumber> cars = illegalCarServiceInterface.getAll();
+        List<CarNumber> cars = illegalCarServiceInterface.getAll();
         model.addAttribute("illegalCars", cars);
         return "mainPage/tables";
     }

@@ -1,2 +1,69 @@
-0
-1
+hello i am thread
+hello i am thread
+hello i am thread
+hello i am thread
+hello i am thread
+Thread ID: 1
+Thread Name: Test worker
+Thread State: RUNNABLE
+=====================
+Thread ID: 2
+Thread Name: Reference Handler
+Thread State: RUNNABLE
+=====================
+Thread ID: 3
+Thread Name: Finalizer
+Thread State: WAITING
+=====================
+Thread ID: 4
+Thread Name: Signal Dispatcher
+Thread State: RUNNABLE
+=====================
+Thread ID: 11
+Thread Name: Common-Cleaner
+Thread State: TIMED_WAITING
+=====================
+Thread ID: 13
+:Thread Name: /127.0.0.1:57766 to /127.0.0.1:57765 workers
+Thread State: WAITING
+=====================
+Thread ID: 14
+CThread Name: /127.0.0.1:57766 to /127.0.0.1:57765 workers Thread 2
+Thread State: WAITING
+=====================
+Thread ID: 15
+CThread Name: /127.0.0.1:57766 to /127.0.0.1:57765 workers Thread 3
+Thread State: RUNNABLE
+=====================
+Thread ID: 1
+Thread Name: Test worker
+Thread State: RUNNABLE
+=====================
+Thread ID: 2
+Thread Name: Reference Handler
+Thread State: RUNNABLE
+=====================
+Thread ID: 3
+Thread Name: Finalizer
+Thread State: WAITING
+=====================
+Thread ID: 4
+Thread Name: Signal Dispatcher
+Thread State: RUNNABLE
+=====================
+Thread ID: 11
+Thread Name: Common-Cleaner
+Thread State: TIMED_WAITING
+=====================
+Thread ID: 13
+:Thread Name: /127.0.0.1:57766 to /127.0.0.1:57765 workers
+Thread State: WAITING
+=====================
+Thread ID: 14
+CThread Name: /127.0.0.1:57766 to /127.0.0.1:57765 workers Thread 2
+Thread State: RUNNABLE
+=====================
+Thread ID: 15
+CThread Name: /127.0.0.1:57766 to /127.0.0.1:57765 workers Thread 3
+Thread State: RUNNABLE
+=====================

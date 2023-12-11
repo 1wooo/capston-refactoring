@@ -30,7 +30,7 @@ public class MonthChartRepoInterfaceImpl implements MonthChartRepoInterface {
             String stDate = '\'' + formatedNow + '-' + i + '-' + "01" + '\'';
 
             Optional<Long> any = em.createQuery(
-                            "SELECT count(c.id) FROM carNumber c WHERE MONTH("+stDate+") = MONTH(c.timestamp)"
+                            "SELECT count(c.id) FROM CarNumber c WHERE MONTH("+stDate+") = MONTH(c.timestamp)"
                             , Long.class)
                     .getResultList()
                     .stream().findAny();

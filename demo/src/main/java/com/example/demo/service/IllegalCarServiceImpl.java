@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.DTO.carNumber;
+import com.example.demo.DTO.CarNumber;
 import com.example.demo.repo.CarNumberRepo;
 import com.example.demo.repo.NotificationCarNumberRepo;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class IllegalCarServiceImpl implements IllegalCarServiceInterface {
     private NotificationCarNumberRepo notificationCarNumberRepo;
 
     @Override
-    public List<carNumber> getAll() {
+    public List<CarNumber> getAll() {
         return carNumberRepo.findAll();
     }
     @Override
@@ -31,12 +31,12 @@ public class IllegalCarServiceImpl implements IllegalCarServiceInterface {
     }
     @Override
     public void illegalCarRegister(HashMap<String, Object> map) throws ParseException{
-        carNumber car = createCarNumberFromMap(map);
+        CarNumber car = createCarNumberFromMap(map);
         carNumberRepo.save(car);
     }
 
-    private carNumber createCarNumberFromMap(HashMap<String, Object> map) throws ParseException {
-        carNumber car = new carNumber();
+    private CarNumber createCarNumberFromMap(HashMap<String, Object> map) throws ParseException {
+        CarNumber car = new CarNumber();
         car.setCarN((String) map.get("carNumber"));
         car.setIllegalCode((int) map.get("illegalCode"));
         car.setFine((int) map.get("fine"));
@@ -60,8 +60,8 @@ public class IllegalCarServiceImpl implements IllegalCarServiceInterface {
     // 테이블 DB와 연결 시 사용함
     @Override
     public void illegalCarRemove(Long id) {
-        Optional<carNumber> tmp = carNumberRepo.findById(id);
-        carNumber requestedCar = tmp.get();
+        Optional<CarNumber> tmp = carNumberRepo.findById(id);
+        CarNumber requestedCar = tmp.get();
 
         requestedCar.setDeleteCode("Y");
     } // 테이블 페이지에 삭제버튼과 연결 (불법주정차 차량관련)

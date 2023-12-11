@@ -9,8 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class JoinController {
     private final JoinService joinService;
 
@@ -18,11 +19,6 @@ public class JoinController {
         this.joinService = joinService;
     }
 
-    @GetMapping("/join")
-    public String join(Model model) {
-        model.addAttribute("userRegistrationDto", new UserRegistrationDto());
-        return "joinPage/join";
-    }
     @PostMapping("/joinProc")
     public ResponseEntity<String> joinProc(UserRegistrationDto userRegistrationDto) {
         boolean isJoinPossible = joinService.join(userRegistrationDto);

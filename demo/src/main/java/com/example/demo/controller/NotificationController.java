@@ -5,6 +5,8 @@ import com.example.demo.service.NotificationSessionConst;
 import com.example.demo.service.Notification_Thread;
 import com.example.demo.service.TableServiceInterface;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +27,18 @@ public class NotificationController {
 
     private final TableServiceInterface tableServiceInterface;
     @PostMapping("notification/exittimeupdate")
-    public void carUpdateExitTime(@RequestBody HashMap<String, Object> map) throws ParseException {
+    public ResponseEntity<?> carUpdateExitTime(@RequestBody HashMap<String, Object> map) throws ParseException {
         //차량 출차 시 출차 시간 업데이트.
-        tableServiceInterface.updateCurrentCarExitTime(map);
+        try {
+            tableServiceInterface.updateCurrentCarExitTime(map);
+            return ResponseEntity.ok("출차 입력 성공");
+        } catch (ParseException e) {
+            // ParseException이 발생했을 때 실패 응답 반환
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("입력 형식이 올바르지 않습니다.");
+        } catch (Exception e) {
+            // 기타 예외가 발생했을 때 실패 응답 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+        }
     }
     @PostMapping("notification/notificationRegister")
     public void NotificationCarRegister(@RequestBody HashMap<String, Object> map) throws ParseException {

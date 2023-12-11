@@ -31,12 +31,12 @@ public class Notification_Thread extends Thread {
             sec += 1;
             if (tableServiceInterface.isOverTIme(carNumber)){
                 String phone = tableServiceInterface.isExistPhoneNumber(carNumber);
-                com.example.demo.DTO.carNumber illegarCarNumberDTO = new carNumber();
-                illegarCarNumberDTO.setCarN(carNumber);
-                illegarCarNumberDTO.setFine(100000);
-                illegarCarNumberDTO.setIllegalCode(1);
-                illegarCarNumberDTO.setTimestamp(tableServiceInterface.getEnteringCarTimestamp(carNumber));
-                tableServiceInterface.illegalCarRegister(illegarCarNumberDTO);
+                com.example.demo.DTO.carNumber illegalCarNumberDTO = new carNumber();
+                illegalCarNumberDTO.setCarN(carNumber);
+                illegalCarNumberDTO.setFine(100000);
+                illegalCarNumberDTO.setIllegalCode(1);
+                illegalCarNumberDTO.setTimestamp(tableServiceInterface.getEnteringCarTimestamp(carNumber));
+                tableServiceInterface.illegalCarRegister(illegalCarNumberDTO);
 
                 if (phone != null){
                     sendMsg.setContent("법적 허용 충전시간 초과");

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.UserRegistrationDto;
 import com.example.demo.Entity.Member;
 import com.example.demo.DTO.NotificationCarNumberDTO;
 import com.example.demo.DTO.carNumber;
@@ -30,6 +31,12 @@ public class MainController {
     @GetMapping("mainPage/index")
     public String getMainPage() {
         return "mainPage/index";
+    }
+
+    @GetMapping("/join")
+    public String join(Model model) {
+        model.addAttribute("userRegistrationDto", new UserRegistrationDto());
+        return "joinPage/join";
     }
 
     // 알림서비스 //

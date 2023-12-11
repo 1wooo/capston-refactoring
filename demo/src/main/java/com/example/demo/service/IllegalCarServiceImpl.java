@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.DTO.carNumber;
 import com.example.demo.repo.CarNumberRepoInterface;
-import com.example.demo.repo.NotificationCarNumberRepoInterface;
+import com.example.demo.repo.NotificationCarNumberRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ import java.util.*;
 public class IllegalCarServiceImpl implements IllegalCarServiceInterface {
 
     private CarNumberRepoInterface carNumberRepoInterface;
-    private NotificationCarNumberRepoInterface notificationCarNumberRepoInterface;
+    private NotificationCarNumberRepo notificationCarNumberRepo;
 
     @Override
     public List<carNumber> getAll() {

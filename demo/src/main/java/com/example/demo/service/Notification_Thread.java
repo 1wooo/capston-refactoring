@@ -120,7 +120,5 @@ public class Notification_Thread extends Thread {
                 break;
             }
         }
-
-//        System.out.println(this.seq + " thread end.");  // 쓰레드 종료
     }
 }

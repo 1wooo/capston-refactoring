@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.DTO.NotificationCarNumberDTO;
+import com.example.demo.service.NotificationService;
 import com.example.demo.service.NotificationSessionConst;
 import com.example.demo.service.Notification_Thread;
-import com.example.demo.service.IllegalCarServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +25,12 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class NotificationController {
 
-    private final IllegalCarServiceInterface illegalCarServiceInterface;
+    private final NotificationService notificationService;
     @PostMapping("notification/exittimeupdate")
     public ResponseEntity<?> carUpdateExitTime(@RequestBody HashMap<String, Object> map) throws ParseException {
         //차량 출차 시 출차 시간 업데이트.
         try {
-            illegalCarServiceInterface.updateCurrentCarExitTime(map);
+            notificationService.updateCurrentCarExitTime(map);
             return ResponseEntity.ok("출차 입력 성공");
         } catch (ParseException e) {
             // ParseException이 발생했을 때 실패 응답 반환

@@ -15,7 +15,7 @@ import java.util.*;
 @Controller
 @RequiredArgsConstructor
 public class MainController {
-    private IllegalCarServiceInterface illegalCarServiceInterface;
+    private NotificationService notificationService;
     private SmsService smsService;
 
     @GetMapping("mainPage/index")
@@ -47,7 +47,7 @@ public class MainController {
         if (notificationCarNumberDTO == null) {
             return "notification/notificationService";
         }
-        Optional<NotificationCarNumberDTO> DTOforGetEnteringTime = illegalCarServiceInterface.isExist(notificationCarNumberDTO.getCarN());
+        Optional<NotificationCarNumberDTO> DTOforGetEnteringTime = notificationService.isExist(notificationCarNumberDTO.getCarN());
         model.addAttribute("enteringTime", DTOforGetEnteringTime.get().getTimestamp());
 
         return "notification/current";

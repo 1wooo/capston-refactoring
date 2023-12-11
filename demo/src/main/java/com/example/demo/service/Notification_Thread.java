@@ -10,13 +10,13 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 public class Notification_Thread extends Thread {
-    private TableServiceInterface tableServiceInterface;
+    private IllegalCarServiceInterface illegalCarServiceInterface;
     private SmsService smsService;
     private int sec;
     private String carNumber;
-    public Notification_Thread(SmsService smsService, TableServiceInterface tableServiceInterface, String carNumber) {
+    public Notification_Thread(SmsService smsService, IllegalCarServiceInterface illegalCarServiceInterface, String carNumber) {
         this.sec = 0;
-        this.tableServiceInterface = tableServiceInterface;
+        this.illegalCarServiceInterface = illegalCarServiceInterface;
         this.smsService = smsService;
         this.carNumber = carNumber;
     }
@@ -29,14 +29,14 @@ public class Notification_Thread extends Thread {
             } catch (Exception e) {
             }
             sec += 1;
-            if (tableServiceInterface.isOverTIme(carNumber)){
-                String phone = tableServiceInterface.isExistPhoneNumber(carNumber);
+            if (illegalCarServiceInterface.isOverTIme(carNumber)){
+                String phone = illegalCarServiceInterface.isExistPhoneNumber(carNumber);
                 com.example.demo.DTO.carNumber illegalCarNumberDTO = new carNumber();
                 illegalCarNumberDTO.setCarN(carNumber);
                 illegalCarNumberDTO.setFine(100000);
                 illegalCarNumberDTO.setIllegalCode(1);
-                illegalCarNumberDTO.setTimestamp(tableServiceInterface.getEnteringCarTimestamp(carNumber));
-                tableServiceInterface.illegalCarRegister(illegalCarNumberDTO);
+                illegalCarNumberDTO.setTimestamp(illegalCarServiceInterface.getEnteringCarTimestamp(carNumber));
+                illegalCarServiceInterface.illegalCarRegister(illegalCarNumberDTO);
 
                 if (phone != null){
                     sendMsg.setContent("법적 허용 충전시간 초과");
@@ -58,7 +58,7 @@ public class Notification_Thread extends Thread {
                 }
             }
             if (sec == 30){
-                String phoneN = tableServiceInterface.isExistPhoneNumber(carNumber);
+                String phoneN = illegalCarServiceInterface.isExistPhoneNumber(carNumber);
                 if (phoneN != null){
                     sendMsg.setContent("주차시간 30분 소요되었습니다.");
                     sendMsg.setTo(phoneN);
@@ -78,7 +78,7 @@ public class Notification_Thread extends Thread {
                 }
 
             } else if (sec == 40) {
-                String phoneN = tableServiceInterface.isExistPhoneNumber(carNumber);
+                String phoneN = illegalCarServiceInterface.isExistPhoneNumber(carNumber);
                 if (phoneN != null){
                     sendMsg.setContent("주차시간 60분 소요되었습니다.");
                     sendMsg.setTo(phoneN);
@@ -98,7 +98,7 @@ public class Notification_Thread extends Thread {
                 }
                 // 1시간 알림
             } else if (sec == 55) {
-                String phoneN = tableServiceInterface.isExistPhoneNumber(carNumber);
+                String phoneN = illegalCarServiceInterface.isExistPhoneNumber(carNumber);
                 if (phoneN != null){
                     sendMsg.setContent("허용 주차시간이 종료되었습니다. 출차해주시기 바랍니다.");
                     sendMsg.setTo(phoneN);

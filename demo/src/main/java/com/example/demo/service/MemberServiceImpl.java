@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.Entity.Member;
-import com.example.demo.repo.CarNumberRepoInterface;
+import com.example.demo.repo.CarNumberRepo;
 import com.example.demo.repo.MemberRepo;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +11,11 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepo memberRepo;
-    private final CarNumberRepoInterface carNumberRepoInterface;
+    private final CarNumberRepo carNumberRepo;
 
-    public MemberServiceImpl(MemberRepo memberRepo, CarNumberRepoInterface carNumberRepoInterface) {
+    public MemberServiceImpl(MemberRepo memberRepo, CarNumberRepo carNumberRepo) {
         this.memberRepo = memberRepo;
-        this.carNumberRepoInterface = carNumberRepoInterface;
+        this.carNumberRepo = carNumberRepo;
     }
 
     @Override

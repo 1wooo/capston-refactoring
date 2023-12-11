@@ -1,9 +1,12 @@
 package com.example.demo.service;
 
+import com.example.demo.DTO.MessageDTO;
 import com.example.demo.DTO.NotificationCarNumberDTO;
 import com.example.demo.DTO.carNumber;
+import com.example.demo.repo.CarNumberRepo;
 import com.example.demo.repo.NotificationCarNumberRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -15,7 +18,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationCarNumberRepo notificationCarNumberRepo;
+    private final IllegalCarServiceInterface illegalCarServiceInterface;
+    private final SmsService smsService;
 
+    private final CarNumberRepo carNumberRepo;
 
     private carNumber createCarNumberFromMap(HashMap<String, Object> map) throws ParseException {
         carNumber car = new carNumber();
@@ -127,5 +133,15 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void NotificationCarRegister(NotificationCarNumberDTO notificationCarNumberDTO) {
         notificationCarNumberRepo.save(notificationCarNumberDTO);
+    }
+
+    @Override
+    @Async
+    public void Notification_alarm(String carNumber) {
+        MessageDTO sendMsg = new MessageDTO();
+        int sec = 0;
+
+
+
     }
 }

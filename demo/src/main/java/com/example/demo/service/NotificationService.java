@@ -16,4 +16,5 @@ public interface NotificationService {
     void updatePhoneNumber(String carNumber, String phoneNumber);
     String isExistPhoneNumber(String carNumber); Optional<NotificationCarNumberDTO> isExist(String carNumber);
     void NotificationCarRegister(NotificationCarNumberDTO notificationCarNumberDTO);
+    void Notification_alarm(String carNumber);
 }

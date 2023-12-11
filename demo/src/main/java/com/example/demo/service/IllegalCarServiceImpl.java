@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.DTO.carNumber;
-import com.example.demo.repo.CarNumberRepoInterface;
+import com.example.demo.repo.CarNumberRepo;
 import com.example.demo.repo.NotificationCarNumberRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,21 +18,21 @@ import java.util.*;
 @RequiredArgsConstructor
 public class IllegalCarServiceImpl implements IllegalCarServiceInterface {
 
-    private CarNumberRepoInterface carNumberRepoInterface;
+    private CarNumberRepo carNumberRepo;
     private NotificationCarNumberRepo notificationCarNumberRepo;
 
     @Override
     public List<carNumber> getAll() {
-        return carNumberRepoInterface.findAll();
+        return carNumberRepo.findAll();
     }
     @Override
     public List<Long> getMonthData() {
-        return carNumberRepoInterface.getData();
+        return carNumberRepo.getData();
     }
     @Override
     public void illegalCarRegister(HashMap<String, Object> map) throws ParseException{
         carNumber car = createCarNumberFromMap(map);
-        carNumberRepoInterface.save(car);
+        carNumberRepo.save(car);
     }
 
     private carNumber createCarNumberFromMap(HashMap<String, Object> map) throws ParseException {
@@ -60,7 +60,7 @@ public class IllegalCarServiceImpl implements IllegalCarServiceInterface {
     // 테이블 DB와 연결 시 사용함
     @Override
     public void illegalCarRemove(Long id) {
-        Optional<carNumber> tmp = carNumberRepoInterface.findById(id);
+        Optional<carNumber> tmp = carNumberRepo.findById(id);
         carNumber requestedCar = tmp.get();
 
         requestedCar.setDeleteCode("Y");

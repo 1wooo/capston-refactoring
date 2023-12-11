@@ -12,8 +12,8 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @AllArgsConstructor
-public class illegarCarNumberDTO {
-    public illegarCarNumberDTO(){
+public class illegalCarNumberDTO {
+    public illegalCarNumberDTO(){
     }
 
     @Id

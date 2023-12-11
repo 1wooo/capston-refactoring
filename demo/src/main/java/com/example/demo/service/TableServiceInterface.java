@@ -25,11 +25,9 @@ public interface TableServiceInterface {
     void updatePhoneNumber(String carNumber, String phoneNumber);
     void updateEnteringTime(String carNumber, java.sql.Timestamp timestamp);
 
-    @Transactional
     void resetNewCarExitTime(String carNumber);
 
-    @Transactional
-    void updateCurrentCarExitTime(String carNumber, java.sql.Timestamp timestamp);
+    void updateCurrentCarExitTime(HashMap<String, Object> map) throws ParseException;
 
     Timestamp getEnteringCarTimestamp(String carNumber);
 

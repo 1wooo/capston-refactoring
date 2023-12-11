@@ -27,17 +27,7 @@ public class NotificationController {
     @PostMapping("notification/exittimeupdate")
     public void carUpdateExitTime(@RequestBody HashMap<String, Object> map) throws ParseException {
         //차량 출차 시 출차 시간 업데이트.
-        String timeStr = (String) map.get("ExitDate");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date date = formatter.parse(timeStr);
-        java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(timestamp.getTime());
-        cal.add(Calendar.HOUR, 12);
-        java.sql.Timestamp newTime = new java.sql.Timestamp(cal.getTime().getTime());
-
-        tableServiceInterface.updateCurrentCarExitTime((String) map.get("carNumber"), newTime);
+        tableServiceInterface.updateCurrentCarExitTime(map);
     }
     @PostMapping("notification/notificationRegister")
     public void NotificationCarRegister(@RequestBody HashMap<String, Object> map) throws ParseException {

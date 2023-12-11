@@ -90,7 +90,6 @@ public class TableServiceImpl implements TableServiceInterface {
     } // 해당 차량번호에 대해 전화번호가 등록이 돼있는지?
 
     @Override
-    @Transactional
     public void updatePhoneNumber(String carNumber, String phoneNumber) {
 
         Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepoInterface.findBycarN(carNumber);
@@ -100,7 +99,6 @@ public class TableServiceImpl implements TableServiceInterface {
     }
 
     @Override
-    @Transactional
     public void updateEnteringTime(String carNumber, Timestamp timestamp) {
         Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepoInterface.findBycarN(carNumber);
         NotificationCarNumberDTO carForupdate = tmp.get();
@@ -109,7 +107,6 @@ public class TableServiceImpl implements TableServiceInterface {
     }
 
     @Override
-    @Transactional
     public void resetNewCarExitTime(String carNumber) {
         Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepoInterface.findBycarN(carNumber);
         NotificationCarNumberDTO carForUpdate = tmp.get();
@@ -118,11 +115,13 @@ public class TableServiceImpl implements TableServiceInterface {
     }
 
     @Override
-    @Transactional
-    public void updateCurrentCarExitTime(String carNumber, Timestamp timestamp) {
-        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepoInterface.findBycarN(carNumber);
-        NotificationCarNumberDTO carForUpdate = tmp.get();
-        carForUpdate.setExitTime(timestamp);
+    public void updateCurrentCarExitTime(HashMap<String, Object> map) throws ParseException {
+        carNumber car = createCarNumberFromMap(map);
+        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepoInterface.findBycarN(car.getCarN());
+        if (tmp.isPresent()) {
+            NotificationCarNumberDTO carForUpdate = tmp.get();
+            carForUpdate.setExitTime(car.getTimestamp());
+        }
     }
 
     @Override

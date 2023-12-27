@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.net.URI;
 import java.util.*;
 
@@ -49,12 +50,7 @@ public class MainController {
 
     // 알림서비스 //
     @GetMapping("notification/notificationService")
-    public String getNotificationServiceWeb(@SessionAttribute(name = NotificationSessionConst.NOTIFY_CAR, required = false)
-                                                NotificationCarNumberDTO notificationCarNumberDTO) {
-        if (notificationCarNumberDTO == null) {
-            return "notification/notificationService";
-        }
-
+    public String getNotificationServiceWeb() {
         return "notification/notificationService";
     }
 
@@ -91,6 +87,10 @@ public class MainController {
             model.addAttribute("msg", "등록번호 확인 완료!");
             model.addAttribute("url", "current");
         }
+
+        HttpSession session = request.getSession();
+        session.setAttribute(NotificationSessionConst.NOTIFY_CAR, notificationService.isExist(inputCarNumber).get());
+
         return "notification/messageRedirect";
     }
 }

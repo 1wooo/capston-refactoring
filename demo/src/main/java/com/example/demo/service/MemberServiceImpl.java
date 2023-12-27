@@ -11,11 +11,9 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepo memberRepo;
-    private final CarNumberRepo carNumberRepo;
 
-    public MemberServiceImpl(MemberRepo memberRepo, CarNumberRepo carNumberRepo) {
+    public MemberServiceImpl(MemberRepo memberRepo) {
         this.memberRepo = memberRepo;
-        this.carNumberRepo = carNumberRepo;
     }
 
     @Override
@@ -23,13 +21,4 @@ public class MemberServiceImpl implements MemberService {
         memberRepo.save(member);
     }
 
-    @Override
-    public Optional<Member> login(String MemberId, String MemberPassword) throws Exception {
-
-        Optional<Member> findMember = memberRepo.findByMemberId(MemberId);
-        System.out.println(findMember);
-//        Member returnMember = findMember.get(); // null인 경우에 대해 예외처리 리팩토링 필요 !!!여기
-
-        return findMember;
-    }
 }

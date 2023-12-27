@@ -15,7 +15,8 @@ public interface NotificationService {
     void resetNewCarExitTime(String carNumber);
     void updateEnteringTime(String carNumber, Timestamp timestamp);
     void updatePhoneNumber(String carNumber, String phoneNumber);
-    String isExistPhoneNumber(String carNumber); Optional<NotificationCarNumberDTO> isExist(String carNumber);
+    String isExistPhoneNumber(String carNumber);
+    Optional<NotificationCarNumberDTO> isExist(String carNumber);
     void notificationCarRegister(NotificationCarNumberDTO notificationCarNumberDTO);
     void notification_alarm(HashMap<String, Object> map) throws NotFoundCarException, InterruptedException, ParseException;
 }

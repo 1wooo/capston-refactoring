@@ -18,8 +18,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class IllegalCarServiceImpl implements IllegalCarServiceInterface {
 
-    private CarNumberRepo carNumberRepo;
-    private NotificationCarNumberRepo notificationCarNumberRepo;
+    private final CarNumberRepo carNumberRepo;
+    private final NotificationCarNumberRepo notificationCarNumberRepo;
 
     @Override
     public List<CarNumber> getAll() {
@@ -49,7 +49,7 @@ public class IllegalCarServiceImpl implements IllegalCarServiceInterface {
 
     private Timestamp createTimestampFromMap(HashMap<String, Object> map) throws ParseException {
         String timeStr = (String) map.get("EnterDate");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = formatter.parse(timeStr);
 
         Calendar cal = Calendar.getInstance();

@@ -17,7 +17,9 @@ public class IllegalCarController {
     @GetMapping("mainPage/tables")
     public String getTablePage(HttpServletRequest request, Model model) {
         List<CarNumber> cars = illegalCarServiceInterface.getAll();
-        model.addAttribute("illegalCars", cars);
+        if (!cars.isEmpty()) {
+            model.addAttribute("illegalCars", cars);
+        }
         return "mainPage/tables";
     }
 }

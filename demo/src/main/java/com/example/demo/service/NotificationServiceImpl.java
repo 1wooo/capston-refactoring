@@ -35,7 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
     private Future<?> taskFuture;
 
 
-    private NotificationCarNumberDTO createCarNumberFromMap(HashMap<String, Object> map) throws ParseException {
+    public NotificationCarNumberDTO createCarNumberFromMap(HashMap<String, Object> map) throws ParseException {
         NotificationCarNumberDTO car = new NotificationCarNumberDTO();
         car.setCarN((String) map.get("carNumber"));
         // 날짜 처리 메소드 호출
@@ -56,7 +56,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
     @Override
     public Boolean isOverTIme(String carNumber) {
-        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findBycarN(carNumber);
+        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findByCarN(carNumber);
         NotificationCarNumberDTO carForUpdate = tmp.get();
 
         Timestamp enterTime = carForUpdate.getTimestamp();
@@ -83,7 +83,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public Timestamp getEnteringCarTimestamp(String carNumber) {
-        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findBycarN(carNumber);
+        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findByCarN(carNumber);
         NotificationCarNumberDTO car = tmp.get();
         return car.getTimestamp();
     }
@@ -91,7 +91,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void updateCurrentCarExitTime(HashMap<String, Object> map) throws ParseException, NotFoundCarException {
         NotificationCarNumberDTO car = createCarNumberFromMap(map);
-        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findBycarN(car.getCarN());
+        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findByCarN(car.getCarN());
         if (tmp.isPresent()) {
             NotificationCarNumberDTO carForUpdate = tmp.get();
             carForUpdate.setExitTime(car.getTimestamp());
@@ -100,7 +100,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void resetNewCarExitTime(String carNumber) {
-        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findBycarN(carNumber);
+        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findByCarN(carNumber);
         NotificationCarNumberDTO carForUpdate = tmp.get();
         carForUpdate.setExitTime(null);
         // 등록차량이 다시 들어왔을때 출차시간 리셋
@@ -108,14 +108,14 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void updateEnteringTime(String carNumber, Timestamp timestamp) {
-        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findBycarN(carNumber);
+        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findByCarN(carNumber);
         NotificationCarNumberDTO carForupdate = tmp.get();
         carForupdate.setTimestamp(timestamp);
     }
 
     @Override
     public void updatePhoneNumber(String carNumber, String phoneNumber) {
-        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findBycarN(carNumber);
+        Optional<NotificationCarNumberDTO> tmp = notificationCarNumberRepo.findByCarN(carNumber);
         NotificationCarNumberDTO carForupdate = tmp.get();
 
         carForupdate.setPhoneNumber(phoneNumber);
@@ -123,13 +123,13 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public String isExistPhoneNumber(String carNumber) {
-        Optional<NotificationCarNumberDTO> bytoPhoneNumber = notificationCarNumberRepo.findBycarN(carNumber);
+        Optional<NotificationCarNumberDTO> bytoPhoneNumber = notificationCarNumberRepo.findByCarN(carNumber);
         return bytoPhoneNumber.map(NotificationCarNumberDTO::getPhoneNumber).orElse(null);
     }
 
     @Override
     public Optional<NotificationCarNumberDTO> isExist(String carNumber) {
-        Optional<NotificationCarNumberDTO> findCar = notificationCarNumberRepo.findBycarN(carNumber);
+        Optional<NotificationCarNumberDTO> findCar = notificationCarNumberRepo.findByCarN(carNumber);
         return findCar; // 있으면 True 없으면 False
     }
 
@@ -141,8 +141,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Async
-    public void notification_alarm(HashMap<String, Object> map) throws InterruptedException, ParseException {
-        int sec = 0;
+    public void notification_alarm(HashMap<String, Object> map) throws InterruptedException, ParseException, NotFoundCarException {
         NotificationCarNumberDTO car = createCarNumberFromMap(map);
         Optional<NotificationCarNumberDTO> notificationCarNumberDTO = isExist(car.getCarN());
 
@@ -155,7 +154,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         String phoneNumber = isExistPhoneNumber(car.getCarN());
 
-        for (int i = 30; i > 0; i--) {
+        for (int i = 10; i > 0; i--) {
             Thread.sleep(1000);
         } // 30초 대기
 
@@ -165,7 +164,7 @@ public class NotificationServiceImpl implements NotificationService {
         sendMessage("주차시간 30분 소요되었습니다.", phoneNumber);
 
 
-        for (int i = 30; i > 0; i--) {
+        for (int i = 10; i > 0; i--) {
             Thread.sleep(1000);
         } // 30초 대기
 
@@ -174,7 +173,7 @@ public class NotificationServiceImpl implements NotificationService {
         }
         sendMessage("주차시간 60분 소요되었습니다.", phoneNumber);
 
-        for (int i = 30; i > 0; i--) {
+        for (int i = 10; i > 0; i--) {
             Thread.sleep(1000);
         } // 30초 대기
 
@@ -183,7 +182,7 @@ public class NotificationServiceImpl implements NotificationService {
         }
         sendMessage("주차시간 90분 소요되었습니다.", phoneNumber);
 
-        for (int i = 30; i > 0; i--) {
+        for (int i = 10; i > 0; i--) {
             Thread.sleep(1000);
         } // 30초 대기
         if (shouldTerminate(car.getCarN(), phoneNumber)) {
@@ -192,7 +191,7 @@ public class NotificationServiceImpl implements NotificationService {
         sendMessage("법적 허용 주차시간 초과되었습니다. 출차 부닥드립니다.", phoneNumber);
     }
 
-    private void sendMessage(String msg, String phoneNumber) {
+    public void sendMessage(String msg, String phoneNumber) {
         MessageDTO sendMsg = new MessageDTO();
 
         if (phoneNumber != null) {
@@ -211,11 +210,12 @@ public class NotificationServiceImpl implements NotificationService {
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
+            System.out.println(msg);
         }
     }
 
-    private boolean shouldTerminate(String carNumber, String phoneNumber) {
-        Optional<NotificationCarNumberDTO> findCar = notificationCarNumberRepo.findBycarN(carNumber);
+    public boolean shouldTerminate(String carNumber, String phoneNumber) {
+        Optional<NotificationCarNumberDTO> findCar = notificationCarNumberRepo.findByCarN(carNumber);
         if (findCar.get().getExitTime() != null) {
             if (isOverTIme(carNumber)) sendMessage("법적 허용 충전시간 초과", phoneNumber);
             return true;

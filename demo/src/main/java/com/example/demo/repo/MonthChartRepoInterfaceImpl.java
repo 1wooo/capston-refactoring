@@ -23,7 +23,6 @@ public class MonthChartRepoInterfaceImpl implements MonthChartRepoInterface {
         LocalDate now = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
         String formatedNow = now.format(formatter);
-//        System.out.println(formatedNow);
 
         List<Long> MonthStatistics = new ArrayList<>();
         for (int i=1; i<=12; i++){

@@ -1,7 +1,6 @@
 package com.example.demo.DTO;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +23,7 @@ public class CarNumber {
     private Long id;
 
     @Column(name = "carn")
-    private String CarN;
+    private String carN;
 
     @Column(name = "illegalcode")
     private int illegalCode;

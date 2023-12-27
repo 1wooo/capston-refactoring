@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface NotificationCarNumberRepo extends JpaRepository<NotificationCarNumberDTO, Long> {
-    Optional<NotificationCarNumberDTO> findBycarN(String carNumber);
+    Optional<NotificationCarNumberDTO> findByCarN(String carNumber);
 }

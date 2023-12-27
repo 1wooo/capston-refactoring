@@ -18,5 +18,6 @@ public class NotificationAlarmServiceImpl implements NotificationAlarmService {
     @Async
     public void notification_alarm(HashMap<String, Object> map) throws NotFoundCarException, InterruptedException, ParseException {
 
+
     }
 }

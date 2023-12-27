@@ -40,10 +40,6 @@ public class MainController {
     public String getCarlogPage() {
         return "mainPage/carlog";
     }
-    @GetMapping("mainPage/liveCam")
-    public String getLiveCamPage() {
-        return "mainPage/liveCam";
-    }
 
     @GetMapping("/join")
     public String join(Model model) {

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.DTO.NotificationCarNumberDTO;
 import com.example.demo.exception.NotFoundCarException;
+import com.example.demo.service.NotificationAlarmService;
 import com.example.demo.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 public class NotificationController {
 
     private final NotificationService notificationService;
+    private final NotificationAlarmService notificationAlarmService;
     @PostMapping("notification/exittimeupdate")
     public ResponseEntity<?> carUpdateExitTime(@RequestBody HashMap<String, Object> map) throws ParseException {
         //차량 출차 시 출차 시간 업데이트.
@@ -43,7 +45,7 @@ public class NotificationController {
         * 3. 판별 결과에 따라 새로 등록할지 아니면 기존 등록 차량 정보를 업데이트할지 선택
         */
         try {
-            notificationService.notification_alarm(map);
+            notificationAlarmService.notification_alarm(map);
             return ResponseEntity.ok("알림서비스 차량 번호 등록 성공");
         } catch (InterruptedException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");

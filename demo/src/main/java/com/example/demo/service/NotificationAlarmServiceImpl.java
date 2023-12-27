@@ -14,7 +14,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NotificationAlarmServiceImpl implements NotificationAlarmService {
     private final NotificationService notificationService;
-    private final SmsService smsService;
     @Override
     @Async
     public void notification_alarm(HashMap<String, Object> map) throws NotFoundCarException, InterruptedException, ParseException {

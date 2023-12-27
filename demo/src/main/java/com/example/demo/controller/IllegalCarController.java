@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.DTO.CarNumber;
+import com.example.demo.Entity.CarNumber;
 import com.example.demo.service.IllegalCarServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

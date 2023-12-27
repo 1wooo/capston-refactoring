@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.DTO.CarNumber;
+import com.example.demo.Entity.CarNumber;
 import java.text.ParseException;
 import java.util.*;
 

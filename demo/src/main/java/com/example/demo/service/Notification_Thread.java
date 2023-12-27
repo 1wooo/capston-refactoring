@@ -1,13 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.DTO.MessageDTO;
-import com.example.demo.DTO.CarNumber;
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 
 public class Notification_Thread extends Thread {
     private IllegalCarServiceInterface illegalCarServiceInterface;

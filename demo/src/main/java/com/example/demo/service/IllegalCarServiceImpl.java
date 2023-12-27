@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.DTO.CarNumber;
+import com.example.demo.Entity.CarNumber;
 import com.example.demo.repo.CarNumberRepo;
 import com.example.demo.repo.NotificationCarNumberRepo;
 import lombok.RequiredArgsConstructor;

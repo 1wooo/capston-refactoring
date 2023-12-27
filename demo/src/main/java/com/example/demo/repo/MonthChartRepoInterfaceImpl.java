@@ -23,14 +23,13 @@ public class MonthChartRepoInterfaceImpl implements MonthChartRepoInterface {
         LocalDate now = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
         String formatedNow = now.format(formatter);
-//        System.out.println(formatedNow);
 
         List<Long> MonthStatistics = new ArrayList<>();
         for (int i=1; i<=12; i++){
             String stDate = '\'' + formatedNow + '-' + i + '-' + "01" + '\'';
 
             Optional<Long> any = em.createQuery(
-                            "SELECT count(c.id) FROM carNumber c WHERE MONTH("+stDate+") = MONTH(c.timestamp)"
+                            "SELECT count(c.id) FROM CarNumber c WHERE MONTH("+stDate+") = MONTH(c.timestamp)"
                             , Long.class)
                     .getResultList()
                     .stream().findAny();

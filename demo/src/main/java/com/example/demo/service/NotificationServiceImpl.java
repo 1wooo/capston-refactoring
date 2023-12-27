@@ -21,20 +21,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 @Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationCarNumberRepo notificationCarNumberRepo;
     private final SmsService smsService;
-
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private Future<?> taskFuture;
-
-
+    @Override
     public NotificationCarNumberDTO createCarNumberFromMap(HashMap<String, Object> map) throws ParseException {
         NotificationCarNumberDTO car = new NotificationCarNumberDTO();
         car.setCarN((String) map.get("carNumber"));
@@ -43,8 +36,8 @@ public class NotificationServiceImpl implements NotificationService {
 
         return car;
     }
-
-    private Timestamp createTimestampFromMap(HashMap<String, Object> map) throws ParseException {
+    @Override
+    public Timestamp createTimestampFromMap(HashMap<String, Object> map) throws ParseException {
         String timeStr = (String) map.get("EnterDate");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date date = formatter.parse(timeStr);
@@ -138,59 +131,7 @@ public class NotificationServiceImpl implements NotificationService {
     public void notificationCarRegister(NotificationCarNumberDTO notificationCarNumberDTO) {
         notificationCarNumberRepo.save(notificationCarNumberDTO);
     }
-
     @Override
-    @Async
-    public void notification_alarm(HashMap<String, Object> map) throws InterruptedException, ParseException, NotFoundCarException {
-        NotificationCarNumberDTO car = createCarNumberFromMap(map);
-        Optional<NotificationCarNumberDTO> notificationCarNumberDTO = isExist(car.getCarN());
-
-        if (notificationCarNumberDTO.isEmpty()) {
-            notificationCarRegister(car);
-        } else {
-            updateEnteringTime(car.getCarN(), car.getTimestamp());
-            resetNewCarExitTime(car.getCarN());
-        }
-
-        String phoneNumber = isExistPhoneNumber(car.getCarN());
-
-        for (int i = 10; i > 0; i--) {
-            Thread.sleep(1000);
-        } // 30초 대기
-
-        if (shouldTerminate(car.getCarN(), phoneNumber)) {
-            return;
-        }
-        sendMessage("주차시간 30분 소요되었습니다.", phoneNumber);
-
-
-        for (int i = 10; i > 0; i--) {
-            Thread.sleep(1000);
-        } // 30초 대기
-
-        if (shouldTerminate(car.getCarN(), phoneNumber)) {
-            return;
-        }
-        sendMessage("주차시간 60분 소요되었습니다.", phoneNumber);
-
-        for (int i = 10; i > 0; i--) {
-            Thread.sleep(1000);
-        } // 30초 대기
-
-        if (shouldTerminate(car.getCarN(), phoneNumber)) {
-            return;
-        }
-        sendMessage("주차시간 90분 소요되었습니다.", phoneNumber);
-
-        for (int i = 10; i > 0; i--) {
-            Thread.sleep(1000);
-        } // 30초 대기
-        if (shouldTerminate(car.getCarN(), phoneNumber)) {
-            return;
-        }
-        sendMessage("법적 허용 주차시간 초과되었습니다. 출차 부닥드립니다.", phoneNumber);
-    }
-
     public void sendMessage(String msg, String phoneNumber) {
         MessageDTO sendMsg = new MessageDTO();
 
@@ -213,7 +154,7 @@ public class NotificationServiceImpl implements NotificationService {
             System.out.println(msg);
         }
     }
-
+    @Override
     public boolean shouldTerminate(String carNumber, String phoneNumber) {
         Optional<NotificationCarNumberDTO> findCar = notificationCarNumberRepo.findByCarN(carNumber);
         if (findCar.get().getExitTime() != null) {

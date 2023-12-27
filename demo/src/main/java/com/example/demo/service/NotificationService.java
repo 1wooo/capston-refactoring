@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface NotificationService {
     Boolean isOverTIme(String carNumber);
     Timestamp getEnteringCarTimestamp(String carNumber);
+    Timestamp createTimestampFromMap(HashMap<String, Object> map) throws ParseException;
+    NotificationCarNumberDTO createCarNumberFromMap(HashMap<String, Object> map) throws ParseException;
     void updateCurrentCarExitTime(HashMap<String, Object> map) throws ParseException, NotFoundCarException;
     void resetNewCarExitTime(String carNumber);
     void updateEnteringTime(String carNumber, Timestamp timestamp);
@@ -18,5 +20,6 @@ public interface NotificationService {
     String isExistPhoneNumber(String carNumber);
     Optional<NotificationCarNumberDTO> isExist(String carNumber);
     void notificationCarRegister(NotificationCarNumberDTO notificationCarNumberDTO);
-    void notification_alarm(HashMap<String, Object> map) throws NotFoundCarException, InterruptedException, ParseException;
+    void sendMessage(String msg, String phoneNumber);
+    boolean shouldTerminate(String carNumber, String phoneNumber);
 }

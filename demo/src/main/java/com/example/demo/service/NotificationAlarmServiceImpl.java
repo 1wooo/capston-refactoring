@@ -14,10 +14,57 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NotificationAlarmServiceImpl implements NotificationAlarmService {
     private final NotificationService notificationService;
+    private final SmsService smsService;
     @Override
     @Async
     public void notification_alarm(HashMap<String, Object> map) throws NotFoundCarException, InterruptedException, ParseException {
 
+        NotificationCarNumberDTO car = notificationService.createCarNumberFromMap(map);
+        Optional<NotificationCarNumberDTO> notificationCarNumberDTO = notificationService.isExist(car.getCarN());
 
+        if (notificationCarNumberDTO.isEmpty()) {
+            notificationService.notificationCarRegister(car);
+        } else {
+            notificationService.updateEnteringTime(car.getCarN(), car.getTimestamp());
+            notificationService.resetNewCarExitTime(car.getCarN());
+        }
+
+        String phoneNumber = notificationService.isExistPhoneNumber(car.getCarN());
+
+        for (int i = 10; i > 0; i--) {
+            Thread.sleep(1000);
+        } // 30초 대기
+
+        if (notificationService.shouldTerminate(car.getCarN(), phoneNumber)) {
+            return;
+        }
+        notificationService.sendMessage("주차시간 30분 소요되었습니다.", phoneNumber);
+
+
+        for (int i = 10; i > 0; i--) {
+            Thread.sleep(1000);
+        } // 30초 대기
+
+        if (notificationService.shouldTerminate(car.getCarN(), phoneNumber)) {
+            return;
+        }
+        notificationService.sendMessage("주차시간 60분 소요되었습니다.", phoneNumber);
+
+        for (int i = 10; i > 0; i--) {
+            Thread.sleep(1000);
+        } // 30초 대기
+
+        if (notificationService.shouldTerminate(car.getCarN(), phoneNumber)) {
+            return;
+        }
+        notificationService.sendMessage("주차시간 90분 소요되었습니다.", phoneNumber);
+
+        for (int i = 10; i > 0; i--) {
+            Thread.sleep(1000);
+        } // 30초 대기
+        if (notificationService.shouldTerminate(car.getCarN(), phoneNumber)) {
+            return;
+        }
+        notificationService.sendMessage("법적 허용 주차시간 초과되었습니다. 출차 부닥드립니다.", phoneNumber);
     }
 }
